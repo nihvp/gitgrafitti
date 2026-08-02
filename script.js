@@ -33,8 +33,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const tourSkipBtn = document.getElementById('tour-skip-btn');
 
     // --- 2. GLOBAL STATE ---
-    // We start with the lightest GitHub green as our default brush.
-    let selectedColor = '#9be9a8'; 
+    // We start with the darkest green as our default brush (lowest activity).
+    let selectedColor = '#216e39'; 
     let tourStep = 0;
 
     const tourSteps = [
@@ -115,9 +115,12 @@ document.addEventListener('DOMContentLoaded', () => {
         if (square.style.backgroundColor === targetRgb) {
             square.style.backgroundColor = ''; // Erase if it matches the active brush
             square.removeAttribute('data-active');
+            square.removeAttribute('data-color'); // Clean up our custom color data tracker
         } else {
             square.style.backgroundColor = selectedColor; // Paint it!
             square.setAttribute('data-active', 'true');
+            // We save the exact hex code to the element so our generator knows how many commits to make later!
+            square.dataset.color = selectedColor; 
         }
     }
 
@@ -284,6 +287,7 @@ document.addEventListener('DOMContentLoaded', () => {
         squares.forEach(square => {
             square.style.backgroundColor = '';
             square.removeAttribute('data-active');
+            square.removeAttribute('data-color');
         });
         codeOutput.value = "";
     });
@@ -319,13 +323,27 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
+        // ⭐ CORRECTED SCALE: Darkest Green = Fewest Commits | Lightest Green = Most Commits
+        const commitScale = {
+            '#216e39': 1,  // Level 1: Darkest Green (1 Commit)
+            '#30a14e': 4,  // Level 2: Medium-Dark (4 Commits)
+            '#40c463': 8,  // Level 3: Medium-Light (8 Commits)
+            '#9be9a8': 12  // Level 4: Lightest/Brightest Green (12 Commits)
+        };
+
         activeSquares.forEach(square => {
             const dateStr = square.dataset.date;
+            const colorHex = square.dataset.color; // Pull the exact hex code we saved when painting!
+            const numCommits = commitScale[colorHex] || 1; // Default to 1 if things get weird
+            
             const timeStr = "12:00:00"; // Fixed to noon to dodge midnight timezone bugs
             const gitDate = `${dateStr} ${timeStr} ${timezone}`;
             
-            // The magic: By spoofing AUTHOR and COMMITTER dates on an empty commit, we hack the GitHub timeline!
-            script += `GIT_AUTHOR_DATE="${gitDate}" GIT_COMMITTER_DATE="${gitDate}" git commit --allow-empty -m "Art commit for ${dateStr}"\n`;
+            // Loop through and fire off multiple commits for the exact same day!
+            for (let i = 0; i < numCommits; i++) {
+                // The magic: By spoofing AUTHOR and COMMITTER dates on an empty commit, we hack the GitHub timeline.
+                script += `GIT_AUTHOR_DATE="${gitDate}" GIT_COMMITTER_DATE="${gitDate}" git commit --allow-empty -m "Art commit for ${dateStr} [${i+1}/${numCommits}]"\n`;
+            }
         });
 
         codeOutput.value = script;
