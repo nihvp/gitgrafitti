@@ -139,43 +139,49 @@ h1, h2, h3, h4, h5, h6, .logo-placeholder {
     transform: translate(3px, 3px);
 }
 
+/* Base state (Light Mode): Moon */
 .theme-toggle__inner-moon {
     width: 20px;
     height: 20px;
     transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     transform-origin: center;
+    transform: rotate(-100deg); 
 }
 
+/* Dark Mode: Sun */
 [data-theme="dark"] .theme-toggle__inner-moon { 
-    transform: rotate(-100deg); 
+    transform: rotate(0deg); 
 }
 
 .theme-toggle__inner-moon .sun-rays {
     transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
     transform-origin: center;
+    transform: scale(0.2); 
+    opacity: 0; 
 }
 
 [data-theme="dark"] .theme-toggle__inner-moon .sun-rays { 
-    transform: scale(0.2); 
-    opacity: 0; 
+    transform: scale(1); 
+    opacity: 1; 
 }
 
 .theme-toggle__inner-moon .sun-core {
     transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     transform-origin: center;
+    transform: scale(1.3); 
 }
 
 [data-theme="dark"] .theme-toggle__inner-moon .sun-core { 
-    transform: scale(1.3); 
+    transform: scale(1); 
 }
 
 .theme-toggle__inner-moon .moon-mask-circle {
     transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-    transform: translate(12px, -12px);
+    transform: translate(0, 0);
 }
 
 [data-theme="dark"] .theme-toggle__inner-moon .moon-mask-circle {
-    transform: translate(0, 0);
+    transform: translate(12px, -12px);
 }
 
 /* --- MINIMIZED FOOTER --- */
