@@ -1,0 +1,459 @@
+/* --- THEMING VARIABLES --- */
+:root {
+    /* Base Palette */
+    --powder-petal: #FFE8D6;
+    --almond-silk: #EFD0CA;
+    --dusty-taupe: #9A8873;
+    --bitter-chocolate: #754043;
+    --dark-coffee: #3A2618;
+    --copperwood: #BC6C25;
+    --sunlit-clay: #DDA15E;
+    
+    /* Default Light Theme Mapping */
+    --bg-color: var(--powder-petal);
+    --panel-bg: var(--almond-silk);
+    --text-color: var(--dark-coffee);
+    --border-color: var(--dark-coffee);
+    --box-shadow: var(--dark-coffee);
+    --terminal-bg: var(--dark-coffee);
+    --terminal-text: #606C38; 
+    
+    /* Grid colors: Using requested #9A8873 for empty aesthetic in light mode */
+    --square-empty-bg: #EFD0CA; 
+    --square-empty-border: rgba(58, 38, 24, 0.2);
+    
+    /* Overlays */
+    --modal-overlay-bg: rgba(58, 38, 24, 0.85);
+    --tour-overlay-bg: rgba(0, 0, 0, 0.65);
+}
+
+/* Dark Theme Overrides */
+[data-theme="dark"] {
+    --bg-color: var(--dark-coffee);
+    --panel-bg: var(--bitter-chocolate);
+    --text-color: var(--powder-petal);
+    --border-color: var(--powder-petal);
+    --box-shadow: var(--powder-petal);
+    --terminal-bg: #1e1e1e; 
+    --terminal-text: #606C38;
+    
+    /* GitHub dark mode default empty square */
+    --square-empty-bg: #161b22; 
+    --square-empty-border: rgba(240, 246, 252, 0.1);
+    
+    --modal-overlay-bg: rgba(0, 0, 0, 0.85);
+}
+
+/* --- BASE STYLES --- */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Fira Code', monospace; 
+    background-color: var(--bg-color); 
+    color: var(--text-color);
+    padding: 2rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+h1, h2, h3, h4, h5, h6, .logo-placeholder {
+    font-family: 'Urbanist', sans-serif;
+}
+
+/* --- LAYOUT COMPONENTS --- */
+.panel {
+    background-color: var(--panel-bg);
+    border: 3px solid var(--border-color);
+    border-radius: 8px;
+    box-shadow: 6px 6px 0px var(--box-shadow);
+    margin-bottom: 2.5rem;
+    padding: 2rem; 
+    transition: all 0.3s;
+}
+
+.container {
+    max-width: 950px;
+    margin: 0 auto;
+    flex: 1; /* Pushes footer neatly down */
+    width: 100%;
+}
+
+/* --- HEADER & NAVIGATION --- */
+.top-nav {
+    max-width: 950px;
+    margin: 0 auto 2.5rem auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.logo-placeholder {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 900;
+    font-size: 1.8rem;
+}
+
+.logo-placeholder span {
+    background: var(--border-color);
+    color: var(--bg-color);
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 1.1rem;
+    font-family: 'Fira Code', monospace;
+    transition: all 0.3s;
+}
+
+.nav-actions {
+    display: flex;
+    gap: 10px;
+    /* align-items: stretch forces the theme toggle and guide button to be identical heights */
+    align-items: stretch; 
+}
+
+/* --- THEME TOGGLE ANIMATION & STYLES --- */
+.theme-toggle-btn {
+    background-color: var(--sunlit-clay);
+    color: var(--dark-coffee);
+    border: 2px solid var(--border-color);
+    border-radius: 6px;
+    box-shadow: 3px 3px 0px var(--box-shadow);
+    cursor: pointer;
+    padding: 0 1rem; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.1s ease;
+}
+
+.theme-toggle-btn:active {
+    box-shadow: 0px 0px 0px var(--box-shadow);
+    transform: translate(3px, 3px);
+}
+
+.theme-toggle__inner-moon {
+    width: 20px;
+    height: 20px;
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-origin: center;
+}
+
+[data-theme="dark"] .theme-toggle__inner-moon { 
+    transform: rotate(-100deg); 
+}
+
+.theme-toggle__inner-moon .sun-rays {
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+    transform-origin: center;
+}
+
+[data-theme="dark"] .theme-toggle__inner-moon .sun-rays { 
+    transform: scale(0.2); 
+    opacity: 0; 
+}
+
+.theme-toggle__inner-moon .sun-core {
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-origin: center;
+}
+
+[data-theme="dark"] .theme-toggle__inner-moon .sun-core { 
+    transform: scale(1.3); 
+}
+
+.theme-toggle__inner-moon .moon-mask-circle {
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    transform: translate(12px, -12px);
+}
+
+[data-theme="dark"] .theme-toggle__inner-moon .moon-mask-circle {
+    transform: translate(0, 0);
+}
+
+/* --- MINIMIZED FOOTER --- */
+footer {
+    text-align: center;
+    padding: 0.8rem;
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: var(--text-color);
+    border-top: 2px dashed var(--dusty-taupe);
+    margin-top: 1.5rem;
+}
+
+/* --- HEATMAP CONTROLS --- */
+.heatmap-controls-top, .heatmap-controls-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    flex-wrap: wrap; 
+    gap: 1.5rem;
+}
+
+.heatmap-controls-top { margin-bottom: 2rem; }
+.heatmap-controls-bottom { margin-top: 2rem; }
+
+.tour-group-inline {
+    display: flex;
+    gap: 1.5rem;
+    padding: 0.5rem;
+    border-radius: 8px;
+}
+
+.control-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.8rem;
+    font-size: 0.95rem;
+}
+
+select {
+    padding: 0.6rem;
+    border: 2px solid var(--border-color);
+    border-radius: 4px;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: 'Fira Code', monospace;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+/* --- COLOR PICKER --- */
+.color-picker {
+    display: flex;
+    gap: 10px;
+}
+
+.color-option {
+    width: 34px;
+    height: 34px;
+    border: 2px solid var(--border-color);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: transform 0.1s ease;
+}
+
+.color-option:hover { transform: translateY(-3px); }
+.color-option input[type="radio"] { display: none; }
+.color-option:has(input:checked) {
+    box-shadow: 0 0 0 3px var(--panel-bg), 0 0 0 6px var(--border-color);
+}
+
+/* --- HEATMAP GRID --- */
+.heatmap-wrapper {
+    width: 100%;
+    overflow-x: auto; 
+    background-color: var(--bg-color);
+    padding: 1.5rem;
+    border: 2px solid var(--border-color);
+    border-radius: 6px;
+    -webkit-overflow-scrolling: touch; 
+    transition: all 0.3s;
+}
+
+.heatmap-grid {
+    display: grid;
+    /* Exactly 7 rows tall to mimic a week */
+    grid-template-rows: repeat(7, 15px);
+    grid-auto-columns: 15px; 
+    /* Columns populate top-to-bottom */
+    grid-auto-flow: column; 
+    gap: 4px;
+    width: max-content; 
+    margin: 0 auto;
+}
+
+.day-square {
+    width: 15px;
+    height: 15px;
+    background-color: var(--square-empty-bg); 
+    border: 1px solid var(--square-empty-border); 
+    border-radius: 2px;
+    cursor: crosshair; 
+    transition: background-color 0.1s;
+}
+
+/* --- BUTTON STYLES --- */
+.primary-btn, .secondary-btn, .icon-btn {
+    font-family: 'Fira Code', monospace;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.1s ease;
+}
+
+.primary-btn, .secondary-btn {
+    padding: 0.8rem 1.2rem;
+    border: 2px solid var(--border-color);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.95rem;
+}
+
+.primary-btn {
+    background-color: var(--copperwood); 
+    color: var(--powder-petal);
+    box-shadow: 4px 4px 0px var(--box-shadow);
+}
+
+.secondary-btn {
+    background-color: var(--sunlit-clay);
+    color: var(--dark-coffee); 
+    box-shadow: 3px 3px 0px var(--box-shadow);
+}
+
+.icon-btn {
+    background: transparent;
+    border: 2px solid var(--border-color);
+    border-radius: 4px;
+    padding: 0.4rem 0.8rem;
+    background-color: var(--sunlit-clay);
+    color: var(--dark-coffee);
+    box-shadow: 2px 2px 0px var(--box-shadow);
+    font-size: 0.85rem;
+}
+
+.action-buttons {
+    display: flex;
+    flex-wrap: wrap; 
+    gap: 12px;
+}
+
+.primary-btn:active, .secondary-btn:active, .icon-btn:active {
+    box-shadow: 0px 0px 0px var(--box-shadow);
+    transform: translate(3px, 3px);
+}
+
+/* --- OUTPUT AREA --- */
+.output-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.8rem;
+}
+
+textarea {
+    width: 100%;
+    background-color: var(--terminal-bg); 
+    color: var(--terminal-text); 
+    padding: 1.5rem;
+    border: 2px solid var(--border-color);
+    border-radius: 6px;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.95rem;
+    resize: vertical;
+    line-height: 1.4;
+    transition: all 0.3s;
+}
+
+/* --- MODALS & ONBOARDING STYLES --- */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: var(--modal-overlay-bg); 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    padding: 1.5rem;
+    transition: background 0.3s;
+}
+
+.modal-content {
+    background-color: var(--bg-color);
+    max-width: 600px;
+    width: 100%;
+    position: relative;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.hidden { display: none !important; }
+
+.modal-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 2rem;
+    justify-content: center;
+}
+
+.close-modal-btn {
+    position: absolute;
+    top: 1rem; right: 1rem;
+    background: var(--bitter-chocolate);
+    color: var(--powder-petal);
+    border: 2px solid var(--border-color);
+    border-radius: 4px;
+    padding: 0.4rem 0.8rem;
+}
+
+.guide-list { margin: 1.5rem 0 1.5rem 2rem; line-height: 1.8; }
+.guide-list li { margin-bottom: 0.8rem; }
+.guide-list a { color: var(--copperwood); font-weight: bold; text-decoration: underline; }
+
+/* --- GUIDED TOUR HIGHLIGHTING SYSTEM --- */
+.tour-overlay {
+    position: fixed;
+    inset: 0;
+    background: var(--tour-overlay-bg);
+    z-index: 900; 
+}
+
+.tour-highlight {
+    position: relative;
+    z-index: 901; 
+    background-color: var(--panel-bg); 
+    border-radius: 8px;
+    box-shadow: 0 0 0 6px var(--bg-color), 8px 8px 0px var(--box-shadow);
+}
+
+.tour-tooltip {
+    position: absolute; 
+    z-index: 902;
+    background-color: var(--sunlit-clay);
+    color: var(--dark-coffee);
+    width: 90%;
+    max-width: 360px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 1.5rem;
+    border: 3px solid var(--border-color);
+    box-shadow: 6px 6px 0px var(--box-shadow);
+    transition: top 0.3s ease, left 0.3s ease;
+}
+
+.tour-actions {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+/* --- MOBILE QUERIES --- */
+@media (max-width: 600px) {
+    .heatmap-controls-top, .heatmap-controls-bottom {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .panel { padding: 1.5rem; }
+    .logo-placeholder { font-size: 1.5rem; }
+    .action-buttons { width: 100%; flex-direction: column; }
+    .action-buttons button { width: 100%; justify-content: center; }
+    .tour-actions { justify-content: center; }
+}

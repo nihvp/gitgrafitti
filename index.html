@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Git Art Generator</title>
+    
+    <!-- Importing our fonts: Urbanist for bold headings, Fira Code for a hacker/developer vibe -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Urbanist:wght@700;900&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Header & Navigation -->
+    <header class="top-nav">
+        <div class="logo-placeholder">
+            <span>[Logo]</span> 
+            <h2>GitGrafitti</h2>
+        </div>
+        
+        <!-- Navigation Actions -->
+        <div class="nav-actions">
+            <!-- Animated Theme Toggle (Matches the height of the Guide button) -->
+            <button id="theme-toggle" class="theme-toggle-btn" title="Toggle Dark Mode" aria-label="Toggle theme">
+                <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="theme-toggle__inner-moon" fill="currentColor" viewBox="0 0 32 32">
+                    <mask id="moon-mask">
+                        <rect x="0" y="0" width="32" height="32" fill="white" />
+                        <!-- This black circle slides over the sun to create the moon shape in dark mode -->
+                        <circle cx="22" cy="10" r="9" fill="black" class="moon-mask-circle" />
+                    </mask>
+                    <path class="sun-rays" d="M27.5 11.5v-7h-7L16 0l-4.5 4.5h-7v7L0 16l4.5 4.5v7h7L16 32l4.5-4.5h7v-7L32 16l-4.5-4.5zM16 25.4a9.39 9.39 0 1 1 0-18.8 9.39 9.39 0 1 1 0 18.8z" />
+                    <circle class="sun-core" cx="16" cy="16" r="8.1" mask="url(#moon-mask)" />
+                </svg>
+            </button>
+            
+            <button id="help-btn" class="secondary-btn"><span>[?]</span> Guide</button>
+        </div>
+    </header>
+
+    <main class="container">
+        
+        <!-- Application Workspace Panel -->
+        <section class="panel">
+            
+            <!-- Controls for picking the year and color -->
+            <div class="heatmap-controls-top">
+                <div id="tour-step-1" class="tour-group-inline">
+                    <div class="control-group">
+                        <label for="year-select">Year:</label>
+                        <select id="year-select">
+                            <!-- Populated by our JS script -->
+                        </select>
+                    </div>
+
+                    <div class="control-group">
+                        <label>Ink Shade:</label>
+                        <div class="color-picker">
+                            <label class="color-option" style="background-color: #9be9a8;">
+                                <input type="radio" name="shade" value="#9be9a8" checked>
+                            </label>
+                            <label class="color-option" style="background-color: #40c463;">
+                                <input type="radio" name="shade" value="#40c463">
+                            </label>
+                            <label class="color-option" style="background-color: #30a14e;">
+                                <input type="radio" name="shade" value="#30a14e">
+                            </label>
+                            <label class="color-option" style="background-color: #216e39;">
+                                <input type="radio" name="shade" value="#216e39">
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Heatmap Drawing Grid -->
+            <div class="heatmap-wrapper" id="tour-step-2">
+                <div id="heatmap" class="heatmap-grid">
+                    <!-- Day squares generated via JS -->
+                </div>
+            </div>
+
+            <!-- Bottom Actions -->
+            <div class="heatmap-controls-bottom" id="tour-step-3">
+                <div class="control-group">
+                    <label for="timezone">Timezone:</label>
+                    <select id="timezone">
+                        <option value="+0000">UTC / GMT (+0000)</option>
+                    </select>
+                </div>
+                
+                <div class="action-buttons">
+                    <button id="reset-btn" class="secondary-btn">
+                        <span>[x]</span> Clear Grid
+                    </button>
+                    <button id="generate-btn" class="primary-btn">
+                        <span>[< >]</span> Generate Git Commands
+                    </button>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- Script Output Panel -->
+        <section class="output panel" id="tour-step-4">
+            <div class="output-header">
+                <label for="code-output">Your Bash Script:</label>
+                <button id="copy-btn" class="icon-btn">
+                    <span id="copy-icon">[Copy]</span> 
+                </button>
+            </div>
+            <textarea id="code-output" rows="8" readonly placeholder="Your generated git commands will appear here..."></textarea>
+        </section>
+    </main>
+
+    <!-- Minimized Footer -->
+    <footer>
+        &copy; 2026 GitGrafitti. All rights reserved.
+        <br>
+        <a href="https://github.com/nihvp/gitgrafitti">Check out the project on GitHub</a>
+    </footer>
+
+    <!-- Modals & Overlays for the Guide -->
+    <div id="modal-overlay" class="modal-overlay hidden">
+        
+        <!-- Welcome Check -->
+        <div id="modal-question" class="modal-content panel hidden">
+            <button class="close-modal-btn">X</button>
+            <h2>Welcome to GitArt!</h2>
+            <p>Do you already know the basics of Git and GitHub?</p>
+            <div class="modal-actions">
+                <button id="btn-knows-git" class="primary-btn">Yes, I know Git</button>
+                <button id="btn-no-git" class="secondary-btn">No, I'm a beginner</button>
+            </div>
+        </div>
+
+        <!-- Absolute Beginner Guide -->
+        <div id="modal-guide" class="modal-content panel hidden">
+            <button class="close-modal-btn">X</button>
+            <h2>Beginner's Guide</h2>
+            <p>No problem! Follow these steps to get your art on your profile.</p>
+            <ol class="guide-list">
+                <li>Go to GitHub and <a href="https://github.com/new" target="_blank">create a new repository</a>. Name it <code>git-art</code>. <strong>Do NOT check "Add a README"</strong>.</li>
+                <li>If you are on Windows, download and install <a href="https://gitforwindows.org/" target="_blank">Git Bash</a>. Mac/Linux users can use the default Terminal app.</li>
+                <li>Open your terminal and type <code>mkdir git-art</code> to create a folder, then <code>cd git-art</code> to enter it.</li>
+                <li>Type <code>git init</code> and press Enter.</li>
+                <li>Use this website to draw your art and click <strong>Generate</strong>. Copy the code.</li>
+                <li>Paste the code into your terminal and press Enter. Wait for it to process.</li>
+                <li>Go back to your empty GitHub repository page, copy the command that looks like: <br><code>git remote add origin https://github.com/YOUR_USERNAME/git-art.git</code><br> Paste it in the terminal and hit Enter.</li>
+                <li>Finally, type <code>git push -u origin main</code> (or master) and hit Enter!</li>
+            </ol>
+            <button id="start-tour-from-guide" class="primary-btn">Start Drawing</button>
+        </div>
+    </div>
+
+    <!-- UI Feature Tour -->
+    <div id="tour-overlay" class="tour-overlay hidden"></div>
+    <div id="tour-tooltip" class="tour-tooltip panel hidden">
+        <p id="tour-text">Tour text goes here.</p>
+        <div class="tour-actions">
+            <button id="tour-skip-btn" class="icon-btn">Skip</button>
+            <button id="tour-prev-btn" class="secondary-btn">Previous</button>
+            <button id="tour-next-btn" class="primary-btn">Next</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
