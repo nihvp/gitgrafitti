@@ -1,7 +1,5 @@
 # GitGrafitti
 
-![GitGrafitti Banner](assets/full_logo_gitgrafitti.png)
-
 > Turn your GitHub contribution graph into a canvas for pixel art.
 
 GitGrafitti is a visual tool that lets you draw custom patterns across any year on a contribution heatmap, pick your shades of GitHub green, and instantly generate a single Bash script that paints your GitHub profile.
@@ -73,3 +71,5 @@ If you ever want to clear your graph and remove the artwork:
 
 ## License
 Distributed under the MIT License. Feel free to fork, adapt, and build upon it!
+
+![GitGrafitti Banner](assets/full_logo_gitgrafitti.png)
