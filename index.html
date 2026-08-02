@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Git Art Generator</title>
+    <title>GitGrafitti - Art Generator</title>
     
-    <!-- Importing our fonts: Urbanist for bold headings, Fira Code for a hacker/developer vibe -->
+    <!-- We're pulling in Urbanist for bold, punchy headings, and Fira Code for that hacker vibe -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Urbanist:wght@700;900&display=swap" rel="stylesheet">
     
+    <!-- Link to our freshly optimized CSS -->
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -17,18 +18,26 @@
     <!-- Header & Navigation -->
     <header class="top-nav">
         <div class="logo-placeholder">
-            <span>[Logo]</span> 
+            <!-- Actual image implementation for your logo -->
+            <img src="logo_gitgrafitti.jpg" alt="GitGrafitti Logo" class="logo-img">
             <h2>GitGrafitti</h2>
         </div>
         
         <!-- Navigation Actions -->
         <div class="nav-actions">
-            <!-- Animated Theme Toggle (Matches the height of the Guide button) -->
+            
+            <!-- New GitHub Repository Link Button -->
+            <a href="https://github.com/nihvp/gitgrafitti" target="_blank" rel="noopener noreferrer" class="theme-toggle-btn" title="View Source on GitHub" aria-label="View on GitHub">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                </svg>
+            </a>
+
+            <!-- Animated Theme Toggle -->
             <button id="theme-toggle" class="theme-toggle-btn" title="Toggle Dark Mode" aria-label="Toggle theme">
                 <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="theme-toggle__inner-moon" fill="currentColor" viewBox="0 0 32 32">
                     <mask id="moon-mask">
                         <rect x="0" y="0" width="32" height="32" fill="white" />
-                        <!-- This black circle slides over the sun to create the moon shape in dark mode -->
                         <circle cx="22" cy="10" r="9" fill="black" class="moon-mask-circle" />
                     </mask>
                     <path class="sun-rays" d="M27.5 11.5v-7h-7L16 0l-4.5 4.5h-7v7L0 16l4.5 4.5v7h7L16 32l4.5-4.5h7v-7L32 16l-4.5-4.5zM16 25.4a9.39 9.39 0 1 1 0-18.8 9.39 9.39 0 1 1 0 18.8z" />
@@ -51,7 +60,7 @@
                     <div class="control-group">
                         <label for="year-select">Year:</label>
                         <select id="year-select">
-                            <!-- Populated by our JS script -->
+                            <!-- Populated dynamically via JS -->
                         </select>
                     </div>
 
@@ -78,7 +87,7 @@
             <!-- Heatmap Drawing Grid -->
             <div class="heatmap-wrapper" id="tour-step-2">
                 <div id="heatmap" class="heatmap-grid">
-                    <!-- Day squares generated via JS -->
+                    <!-- Day squares generated rapidly via JS DocumentFragments -->
                 </div>
             </div>
 
@@ -115,11 +124,9 @@
         </section>
     </main>
 
-    <!-- Minimized Footer -->
+    <!-- Snug, Minimized Footer -->
     <footer>
-        &copy; 2026 GitGrafitti. All rights reserved.
-        <br>
-        <a href="https://github.com/nihvp/gitgrafitti">Check out the project on GitHub</a>
+        &copy; 2026 GitGrafitti. All rights reserved. | <a href="https://github.com/nihvp/gitgrafitti" target="_blank" rel="noopener noreferrer">View Project on GitHub</a>
     </footer>
 
     <!-- Modals & Overlays for the Guide -->
@@ -128,7 +135,7 @@
         <!-- Welcome Check -->
         <div id="modal-question" class="modal-content panel hidden">
             <button class="close-modal-btn">X</button>
-            <h2>Welcome to GitArt!</h2>
+            <h2>Welcome to GitGrafitti!</h2>
             <p>Do you already know the basics of Git and GitHub?</p>
             <div class="modal-actions">
                 <button id="btn-knows-git" class="primary-btn">Yes, I know Git</button>
@@ -142,13 +149,13 @@
             <h2>Beginner's Guide</h2>
             <p>No problem! Follow these steps to get your art on your profile.</p>
             <ol class="guide-list">
-                <li>Go to GitHub and <a href="https://github.com/new" target="_blank">create a new repository</a>. Name it <code>git-art</code>. <strong>Do NOT check "Add a README"</strong>.</li>
+                <li>Go to GitHub and <a href="https://github.com/new" target="_blank">create a new repository</a>. Name it <code>gitgrafitti-art</code>. <strong>Do NOT check "Add a README"</strong>.</li>
                 <li>If you are on Windows, download and install <a href="https://gitforwindows.org/" target="_blank">Git Bash</a>. Mac/Linux users can use the default Terminal app.</li>
-                <li>Open your terminal and type <code>mkdir git-art</code> to create a folder, then <code>cd git-art</code> to enter it.</li>
+                <li>Open your terminal and type <code>mkdir gitgrafitti-art</code> to create a folder, then <code>cd gitgrafitti-art</code> to enter it.</li>
                 <li>Type <code>git init</code> and press Enter.</li>
                 <li>Use this website to draw your art and click <strong>Generate</strong>. Copy the code.</li>
                 <li>Paste the code into your terminal and press Enter. Wait for it to process.</li>
-                <li>Go back to your empty GitHub repository page, copy the command that looks like: <br><code>git remote add origin https://github.com/YOUR_USERNAME/git-art.git</code><br> Paste it in the terminal and hit Enter.</li>
+                <li>Go back to your empty GitHub repository page, copy the command that looks like: <br><code>git remote add origin https://github.com/YOUR_USERNAME/gitgrafitti-art.git</code><br> Paste it in the terminal and hit Enter.</li>
                 <li>Finally, type <code>git push -u origin main</code> (or master) and hit Enter!</li>
             </ol>
             <button id="start-tour-from-guide" class="primary-btn">Start Drawing</button>
