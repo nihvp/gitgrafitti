@@ -8,10 +8,10 @@
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="assets/logo_gitgrafitti.ico">
     
-    <!-- We're pulling in Urbanist for bold, punchy headings, and Fira Code for that hacker vibe -->
+    <!-- We're pulling in Inter for clean UI, and JetBrains Mono for that modern dev vibe -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Urbanist:wght@700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
     
     <!-- Link to our freshly optimized CSS -->
     <link rel="stylesheet" href="style.css">
@@ -150,18 +150,56 @@
         <div id="modal-guide" class="modal-content panel hidden">
             <button class="close-modal-btn">X</button>
             <h2>Beginner's Guide</h2>
-            <p>No problem! Follow these steps to get your art on your profile.</p>
-            <ol class="guide-list">
-                <li>Go to GitHub and <a href="https://github.com/new" target="_blank">create a new repository</a>. Name it <code>gitgrafitti-art</code>. <strong>Do NOT check "Add a README"</strong>.</li>
-                <li>If you are on Windows, download and install <a href="https://gitforwindows.org/" target="_blank">Git Bash</a>. Mac/Linux users can use the default Terminal app.</li>
-                <li>Open your terminal and type <code>mkdir gitgrafitti-art</code> to create a folder, then <code>cd gitgrafitti-art</code> to enter it.</li>
-                <li>Type <code>git init</code> and press Enter.</li>
-                <li>Use this website to draw your art and click <strong>Generate</strong>. Copy the code.</li>
-                <li>Paste the code into your terminal and press Enter. Wait for it to process.</li>
-                <li>Go back to your empty GitHub repository page, copy the command that looks like: <br><code>git remote add origin https://github.com/YOUR_USERNAME/gitgrafitti-art.git</code><br> Paste it in the terminal and hit Enter.</li>
-                <li>Finally, type <code>git push -u origin main</code> (or master) and hit Enter!</li>
-            </ol>
-            <button id="start-tour-from-guide" class="primary-btn">Start Drawing</button>
+            <p>Follow these steps to get your art on your profile.</p>
+            <div id="guide-wizard" class="wizard-container">
+                <div class="wizard-step active" data-step="1">
+                    <h3>1. Create a Repository</h3>
+                    <p>Go to GitHub and <a href="https://github.com/new" target="_blank">create a new repository</a>.</p>
+                    <ul style="margin-top: 10px; padding-left: 20px;">
+                        <li>Name it <code>gitgrafitti-art</code></li>
+                        <li><strong>Leave "Add a README" unchecked</strong></li>
+                    </ul>
+                </div>
+                <div class="wizard-step hidden" data-step="2">
+                    <h3>2. Open your Terminal</h3>
+                    <p>We need a place to run commands.</p>
+                    <ul style="margin-top: 10px; padding-left: 20px;">
+                        <li><strong>Windows:</strong> Download and install <a href="https://gitforwindows.org/" target="_blank">Git Bash</a>, then open it.</li>
+                        <li><strong>Mac/Linux:</strong> Open your built-in <strong>Terminal</strong> app.</li>
+                    </ul>
+                </div>
+                <div class="wizard-step hidden" data-step="3">
+                    <h3>3. Clone your Repository</h3>
+                    <p>Go back to your empty GitHub repository page and copy the exact URL it gives you.</p>
+                    <p style="margin-top: 10px;">Run these commands (replace the URL with yours) to download the folder and enter it:</p>
+                    <div class="code-box"><code>git clone https://github.com/YOUR_USERNAME/gitgrafitti-art.git</code></div>
+                    <div class="code-box"><code>cd gitgrafitti-art</code></div>
+                    <p style="margin-top: 10px; font-size: 0.85rem; opacity: 0.8;"><em>Note: It will warn you that you cloned an empty repository. That's perfectly fine!</em></p>
+                </div>
+                <div class="wizard-step hidden" data-step="4">
+                    <h3>4. Generate & Run</h3>
+                    <p>Draw your artwork on this website, then click the <strong>Generate</strong> button.</p>
+                    <p style="margin-top: 10px;">Click <strong>Copy Code</strong>, paste it into your terminal, and press Enter. <em>(Wait for it to finish processing!)</em></p>
+                </div>
+                <div class="wizard-step hidden" data-step="5">
+                    <h3>5. Publish your Art</h3>
+                    <p>Finally, push your new art history to GitHub by running this command:</p>
+                    <div class="code-box"><code>git push -u origin main</code></div>
+                    <p style="margin-top: 10px; font-size: 0.85rem; opacity: 0.8;"><em>(If it fails, try using <code>master</code> instead of <code>main</code>)</em></p>
+                </div>
+                
+                <div class="wizard-progress-wrapper">
+                    <div class="progress-bar-container">
+                        <div id="wizard-progress-bar" class="progress-bar-fill" style="width: 20%;"></div>
+                    </div>
+                </div>
+                <div class="wizard-controls">
+                    <button type="button" id="wizard-prev" class="secondary-btn hidden" disabled>Previous</button>
+                    <div style="flex-grow: 1;"></div>
+                    <button type="button" id="wizard-next" class="primary-btn">Next</button>
+                    <button type="button" id="start-tour-from-guide" class="primary-btn hidden">Start Drawing</button>
+                </div>
+            </div>
         </div>
     </div>
 

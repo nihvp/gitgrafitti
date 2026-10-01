@@ -221,6 +221,65 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('btn-knows-git').addEventListener('click', () => { closeModal(); startTour(); });
     document.getElementById('start-tour-from-guide').addEventListener('click', () => { closeModal(); startTour(); });
 
+    // Beginner Guide Wizard Logic
+    let wizardStep = 1;
+    const totalWizardSteps = 5;
+    const wizardPrev = document.getElementById('wizard-prev');
+    const wizardNext = document.getElementById('wizard-next');
+    const wizardProgressBar = document.getElementById('wizard-progress-bar');
+    const startTourFromGuide = document.getElementById('start-tour-from-guide');
+    
+    function updateWizard() {
+        document.querySelectorAll('.wizard-step').forEach(step => {
+            if (parseInt(step.dataset.step) === wizardStep) {
+                step.classList.remove('hidden');
+                step.classList.add('active');
+            } else {
+                step.classList.add('hidden');
+                step.classList.remove('active');
+            }
+        });
+        
+        if (wizardProgressBar) {
+            const percentage = (wizardStep / totalWizardSteps) * 100;
+            wizardProgressBar.style.width = `${percentage}%`;
+        }
+        
+        if (wizardStep === 1) {
+            wizardPrev.classList.add('hidden');
+            wizardPrev.disabled = true;
+        } else {
+            wizardPrev.classList.remove('hidden');
+            wizardPrev.disabled = false;
+        }
+        
+        if (wizardStep === totalWizardSteps) {
+            wizardNext.classList.add('hidden');
+            startTourFromGuide.classList.remove('hidden');
+        } else {
+            wizardNext.classList.remove('hidden');
+            startTourFromGuide.classList.add('hidden');
+        }
+    }
+    
+    if (wizardPrev && wizardNext) {
+        wizardPrev.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (wizardStep > 1) {
+                wizardStep--;
+                updateWizard();
+            }
+        });
+        
+        wizardNext.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (wizardStep < totalWizardSteps) {
+                wizardStep++;
+                updateWizard();
+            }
+        });
+    }
+
     // The Guided Tour Controller
     function startTour() {
         tourStep = 0;
