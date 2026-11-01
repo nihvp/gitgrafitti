@@ -106,18 +106,18 @@
 
                     <div class="control-group">
                         <label>Ink Shade:</label>
-                        <div class="color-picker">
-                            <label class="color-option" style="background-color: #9be9a8;">
-                                <input type="radio" name="shade" value="#9be9a8">
+                        <div class="color-picker" id="color-picker">
+                            <label class="color-option level-1" title="Level 1: Less Commits (1 commit)">
+                                <input type="radio" name="shade" value="1">
                             </label>
-                            <label class="color-option" style="background-color: #40c463;">
-                                <input type="radio" name="shade" value="#40c463">
+                            <label class="color-option level-2" title="Level 2: (4 commits)">
+                                <input type="radio" name="shade" value="2">
                             </label>
-                            <label class="color-option" style="background-color: #30a14e;">
-                                <input type="radio" name="shade" value="#30a14e">
+                            <label class="color-option level-3" title="Level 3: (8 commits)">
+                                <input type="radio" name="shade" value="3">
                             </label>
-                            <label class="color-option" style="background-color: #216e39;">
-                                <input type="radio" name="shade" value="#216e39" checked>
+                            <label class="color-option level-4" title="Level 4: More Commits (12 commits)">
+                                <input type="radio" name="shade" value="4" checked>
                             </label>
                         </div>
                     </div>
@@ -126,8 +126,24 @@
 
             <!-- Heatmap Drawing Grid -->
             <div class="heatmap-wrapper" id="tour-step-2">
-                <div id="heatmap" class="heatmap-grid">
-                    <!-- Day squares generated rapidly via JS DocumentFragments -->
+                <div class="heatmap-container">
+                    <div id="heatmap" class="heatmap-grid">
+                        <!-- Day squares generated rapidly via JS DocumentFragments -->
+                    </div>
+                    <div class="heatmap-footer">
+                        <a href="https://docs.github.com/en/account-and-profile/setting-up-and-managing-your-github-profile/managing-contribution-settings-on-your-profile/why-are-my-contributions-not-showing-up-on-my-profile" target="_blank" rel="noopener noreferrer" class="contrib-legend-link">Learn how we count contributions</a>
+                        <div class="contrib-legend">
+                            <span class="legend-label">Less</span>
+                            <ul class="legend-cells">
+                                <li class="legend-cell level-0" data-level="0" title="No contributions"></li>
+                                <li class="legend-cell level-1" data-level="1" title="Level 1: Less commits (1 commit)"></li>
+                                <li class="legend-cell level-2" data-level="2" title="Level 2: (4 commits)"></li>
+                                <li class="legend-cell level-3" data-level="3" title="Level 3: (8 commits)"></li>
+                                <li class="legend-cell level-4" data-level="4" title="Level 4: More commits (12 commits)"></li>
+                            </ul>
+                            <span class="legend-label">More</span>
+                        </div>
+                    </div>
                 </div>
             </div>
 

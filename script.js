@@ -33,8 +33,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const tourSkipBtn = document.getElementById('tour-skip-btn');
 
     // --- 2. GLOBAL STATE ---
-    // We start with the darkest green as our default brush (lowest activity).
-    let selectedColor = '#216e39'; 
+    // We start with Level 4 (highest activity / most commits) as our default brush.
+    let selectedLevel = '4'; 
     let tourStep = 0;
 
     const tourSteps = [
@@ -45,16 +45,21 @@ document.addEventListener('DOMContentLoaded', () => {
     ];
 
     // --- 3. DARK MODE SYSTEM ---
-    // Does the user love dark mode natively on their machine? Let's respect that immediately!
-    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    // Respect saved theme preference or OS default
+    const savedTheme = localStorage.getItem('gitgrafitti_theme');
+    if (savedTheme === 'dark' || (!savedTheme && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
         htmlRoot.setAttribute('data-theme', 'dark');
+    } else {
+        htmlRoot.removeAttribute('data-theme');
     }
 
     themeToggle.addEventListener('click', () => {
         if (htmlRoot.getAttribute('data-theme') === 'dark') {
             htmlRoot.removeAttribute('data-theme');
+            localStorage.setItem('gitgrafitti_theme', 'light');
         } else {
             htmlRoot.setAttribute('data-theme', 'dark');
+            localStorage.setItem('gitgrafitti_theme', 'dark');
         }
     });
 
@@ -90,37 +95,20 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // ⭐ OPTIMIZATION: A caching dictionary for our Hex-to-RGB conversions!
-    // DOM querying is slow. Now, we only calculate a color's RGB string ONCE, then save it here forever.
-    const rgbCache = {};
-
-    function hexToRgbString(hex) {
-        if (rgbCache[hex]) return rgbCache[hex]; // Fast track: return from cache instantly!
-        
-        const dummy = document.createElement('div');
-        dummy.style.color = hex;
-        document.body.appendChild(dummy);
-        const rgb = window.getComputedStyle(dummy).color;
-        document.body.removeChild(dummy);
-        
-        rgbCache[hex] = rgb; // Save it to the vault
-        return rgb;
-    }
-
     // --- 5. THE HEATMAP ENGINE ---
 
-    // The logic to paint or erase a single square.
+    // The logic to paint or erase a single square using semantic activity levels.
     function paintSquare(square) {
-        const targetRgb = hexToRgbString(selectedColor);
-        if (square.style.backgroundColor === targetRgb) {
-            square.style.backgroundColor = ''; // Erase if it matches the active brush
+        if (square.dataset.level === selectedLevel) {
             square.removeAttribute('data-active');
-            square.removeAttribute('data-color'); // Clean up our custom color data tracker
+            square.removeAttribute('data-level');
+            square.removeAttribute('data-color');
+            square.style.backgroundColor = '';
         } else {
-            square.style.backgroundColor = selectedColor; // Paint it!
             square.setAttribute('data-active', 'true');
-            // We save the exact hex code to the element so our generator knows how many commits to make later!
-            square.dataset.color = selectedColor; 
+            square.dataset.level = selectedLevel;
+            square.removeAttribute('data-color');
+            square.style.backgroundColor = '';
         }
     }
 
@@ -329,9 +317,22 @@ document.addEventListener('DOMContentLoaded', () => {
     // Prevent grid highlighting text while drawing
     grid.addEventListener('dragstart', (e) => e.preventDefault());
 
-    // Switch paint colors instantly
+    // Switch paint levels instantly
     colorRadios.forEach(radio => {
-        radio.addEventListener('change', (e) => selectedColor = e.target.value);
+        radio.addEventListener('change', (e) => selectedLevel = e.target.value);
+    });
+
+    // Also allow clicking cells in the bottom-right legend to select that shade
+    const legendCells = document.querySelectorAll('.legend-cell:not(.level-0)');
+    legendCells.forEach(cell => {
+        cell.addEventListener('click', () => {
+            const level = cell.dataset.level;
+            if (level) {
+                selectedLevel = level;
+                const targetRadio = document.querySelector(`input[name="shade"][value="${level}"]`);
+                if (targetRadio) targetRadio.checked = true;
+            }
+        });
     });
 
     // Rebuild grid for different years
@@ -347,6 +348,7 @@ document.addEventListener('DOMContentLoaded', () => {
             square.style.backgroundColor = '';
             square.removeAttribute('data-active');
             square.removeAttribute('data-color');
+            square.removeAttribute('data-level');
         });
         codeOutput.value = "";
     });
@@ -359,7 +361,7 @@ document.addEventListener('DOMContentLoaded', () => {
             await navigator.clipboard.writeText(codeOutput.value);
             
             copyIcon.textContent = "[Copied!]";
-            copyBtn.style.backgroundColor = "var(--gh-green-2)";
+            copyBtn.style.backgroundColor = "var(--gh-level-2)";
             
             setTimeout(() => {
                 copyIcon.textContent = "[Copy]";
@@ -382,18 +384,26 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        // ⭐ CORRECTED SCALE: Darkest Green = Fewest Commits | Lightest Green = Most Commits
+        // GitHub scales contribution colors by commit volume:
+        // Level 1: 1 commit (Less)
+        // Level 2: 4 commits
+        // Level 3: 8 commits
+        // Level 4: 12 commits (More)
+        //
+        // On GitHub:
+        // In Light Mode: Level 1 is Light Green (#9be9a8), Level 4 is Dark Green (#216e39).
+        // In Dark Mode:  Level 1 is Dark Green (#0e4429),  Level 4 is Bright/Light Green (#39d353).
         const commitScale = {
-            '#216e39': 1,  // Level 1: Darkest Green (1 Commit)
-            '#30a14e': 4,  // Level 2: Medium-Dark (4 Commits)
-            '#40c463': 8,  // Level 3: Medium-Light (8 Commits)
-            '#9be9a8': 12  // Level 4: Lightest/Brightest Green (12 Commits)
+            '1': 1,   // Level 1: 1 Commit (Less)
+            '2': 4,   // Level 2: 4 Commits
+            '3': 8,   // Level 3: 8 Commits
+            '4': 12   // Level 4: 12 Commits (More)
         };
 
         activeSquares.forEach(square => {
             const dateStr = square.dataset.date;
-            const colorHex = square.dataset.color; // Pull the exact hex code we saved when painting!
-            const numCommits = commitScale[colorHex] || 1; // Default to 1 if things get weird
+            const level = square.dataset.level || '4';
+            const numCommits = commitScale[level] || 1;
             
             const timeStr = "12:00:00"; // Fixed to noon to dodge midnight timezone bugs
             const gitDate = `${dateStr} ${timeStr} ${timezone}`;

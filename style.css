@@ -22,6 +22,16 @@
     --square-empty-bg: #9A8873; 
     --square-empty-border: rgba(58, 38, 24, 0.2);
     
+    /* GitHub Contribution Colors - Light Mode */
+    /* Light Mode: Light Green for Less Commits -> Dark Green for More Commits */
+    --gh-level-0: var(--square-empty-bg);
+    --gh-level-1: #9be9a8;
+    --gh-level-2: #40c463;
+    --gh-level-3: #30a14e;
+    --gh-level-4: #216e39;
+    --gh-green-2: #40c463;
+    --legend-text: #76695b;
+    
     /* Overlays */
     --modal-overlay-bg: rgba(58, 38, 24, 0.85);
     --tour-overlay-bg: rgba(0, 0, 0, 0.65);
@@ -40,6 +50,16 @@
     /* GitHub dark mode default empty square */
     --square-empty-bg: #161b22; 
     --square-empty-border: rgba(240, 246, 252, 0.1);
+    
+    /* GitHub Contribution Colors - Dark Mode */
+    /* Dark Mode: Dark Green for Less Commits -> Light Green for More Commits */
+    --gh-level-0: var(--square-empty-bg);
+    --gh-level-1: #0e4429;
+    --gh-level-2: #006d32;
+    --gh-level-3: #26a641;
+    --gh-level-4: #39d353;
+    --gh-green-2: #26a641;
+    --legend-text: #8b949e;
     
     --modal-overlay-bg: rgba(0, 0, 0, 0.85);
 }
@@ -260,7 +280,7 @@ select {
     border: 2px solid var(--border-color);
     border-radius: 4px;
     cursor: pointer;
-    transition: transform 0.1s ease;
+    transition: transform 0.1s ease, background-color 0.3s;
 }
 
 .color-option:hover { transform: translateY(-3px); }
@@ -268,6 +288,11 @@ select {
 .color-option:has(input:checked) {
     box-shadow: 0 0 0 3px var(--panel-bg), 0 0 0 6px var(--border-color);
 }
+
+.color-option.level-1 { background-color: var(--gh-level-1); }
+.color-option.level-2 { background-color: var(--gh-level-2); }
+.color-option.level-3 { background-color: var(--gh-level-3); }
+.color-option.level-4 { background-color: var(--gh-level-4); }
 
 /* --- HEATMAP GRID --- */
 .heatmap-wrapper {
@@ -279,6 +304,14 @@ select {
     border-radius: 6px;
     -webkit-overflow-scrolling: touch; 
     transition: all 0.3s;
+}
+
+.heatmap-container {
+    width: max-content;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
 }
 
 .heatmap-grid {
@@ -301,6 +334,103 @@ select {
     border-radius: 2px;
     cursor: crosshair; 
     transition: background-color 0.1s;
+}
+
+.day-square[data-level="1"] {
+    background-color: var(--gh-level-1);
+}
+
+.day-square[data-level="2"] {
+    background-color: var(--gh-level-2);
+}
+
+.day-square[data-level="3"] {
+    background-color: var(--gh-level-3);
+}
+
+.day-square[data-level="4"] {
+    background-color: var(--gh-level-4);
+}
+
+/* --- HEATMAP FOOTER & CONTRIBUTION SCALE LEGEND --- */
+.heatmap-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    font-size: 0.75rem;
+    padding: 0 2px;
+}
+
+.contrib-legend-link {
+    color: var(--legend-text);
+    text-decoration: none;
+    font-size: 0.75rem;
+    transition: color 0.2s;
+}
+
+.contrib-legend-link:hover {
+    color: var(--copperwood);
+    text-decoration: underline;
+}
+
+.contrib-legend {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-left: auto;
+}
+
+.legend-label {
+    font-size: 0.75rem;
+    color: var(--legend-text);
+    user-select: none;
+}
+
+.legend-cells {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.legend-cell {
+    width: 11px;
+    height: 11px;
+    border-radius: 2px;
+    border: 1px solid var(--square-empty-border);
+    transition: transform 0.1s ease, background-color 0.3s;
+    box-sizing: border-box;
+}
+
+.legend-cell:not(.level-0) {
+    cursor: pointer;
+}
+
+.legend-cell:not(.level-0):hover {
+    transform: scale(1.25);
+}
+
+.legend-cell.level-0 {
+    background-color: var(--gh-level-0);
+}
+
+.legend-cell.level-1 {
+    background-color: var(--gh-level-1);
+}
+
+.legend-cell.level-2 {
+    background-color: var(--gh-level-2);
+}
+
+.legend-cell.level-3 {
+    background-color: var(--gh-level-3);
+}
+
+.legend-cell.level-4 {
+    background-color: var(--gh-level-4);
 }
 
 /* --- BUTTON STYLES --- */
