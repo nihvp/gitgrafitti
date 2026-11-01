@@ -128,8 +128,48 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // Accurately position month labels above the first week/column of each month based on year
+    function renderMonths(year) {
+        const monthsContainer = document.getElementById('heatmap-months');
+        if (!monthsContainer) return;
+        monthsContainer.innerHTML = '';
+
+        const startDate = new Date(year, 0, 1);
+        const endDate = new Date(year, 11, 31);
+        const startDayOffset = startDate.getDay();
+
+        let col = 0;
+        let row = startDayOffset;
+        let currentDate = new Date(startDate);
+        
+        const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        const fragment = document.createDocumentFragment();
+
+        while (currentDate <= endDate) {
+            if (currentDate.getDate() === 1) {
+                const m = currentDate.getMonth();
+                const label = document.createElement('span');
+                label.classList.add('month-label');
+                label.textContent = monthNames[m];
+                label.style.left = `${col * 19}px`;
+                fragment.appendChild(label);
+            }
+
+            row++;
+            if (row > 6) {
+                row = 0;
+                col++;
+            }
+            currentDate.setDate(currentDate.getDate() + 1);
+        }
+
+        monthsContainer.appendChild(fragment);
+    }
+
     // This builds the calendar grid dynamically
     function renderGrid(yearStr) {
+        const year = parseInt(yearStr);
+        renderMonths(year);
         grid.innerHTML = ''; // Clear the canvas!
         
         // ⭐ OPTIMIZATION: Document Fragments
@@ -137,7 +177,6 @@ document.addEventListener('DOMContentLoaded', () => {
         // year in an invisible "fragment" in memory, and then slap it onto the DOM all at once. Lightning fast! ⚡
         const fragment = document.createDocumentFragment(); 
         
-        const year = parseInt(yearStr);
         const startDate = new Date(year, 0, 1);   
         const endDate = new Date(year, 11, 31);   
         
