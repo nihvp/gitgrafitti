@@ -6,17 +6,17 @@
     <meta name="description" content="Generate beautiful GitHub contribution graph art with GitGrafitti. Draw your pixel art and get the git commands instantly.">
     <meta name="keywords" content="GitHub, GitGrafitti, contribution graph, art generator, pixel art, developer tools, GitHub profile, green squares">
     <meta name="author" content="Muhammed">
-    
+
     <!-- Canonical URL to consolidate SEO between domains -->
     <link rel="canonical" href="https://muhammed.me/gitgrafitti">
-    
+
     <!-- Open Graph / Social Media Meta Tags -->
     <meta property="og:title" content="GitGrafitti - GitHub Contribution Art Generator">
     <meta property="og:description" content="Draw beautiful pixel art directly on your GitHub contribution graph. Generate the commands instantly.">
     <meta property="og:url" content="https://muhammed.me/gitgrafitti">
     <meta property="og:type" content="website">
     <meta property="og:image" content="https://muhammed.me/gitgrafitti/assets/full_logo_gitgrafitti.png">
-    
+
     <!-- Twitter Card Meta Tags -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="GitGrafitti - GitHub Contribution Art Generator">
@@ -41,15 +41,15 @@
     }
     </script>
     <title>GitGrafitti - Art Generator</title>
-    
+
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="assets/logo_gitgrafitti.ico">
-    
+
     <!-- We're pulling in Inter for clean UI, and JetBrains Mono for that modern dev vibe -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
-    
+
     <!-- Link to our freshly optimized CSS -->
     <link rel="stylesheet" href="style.css">
 </head>
@@ -62,10 +62,10 @@
             <img src="assets/logo_gitgrafitti.png" alt="GitGrafitti Logo" class="logo-img" width="36" height="36" fetchpriority="high">
             <h2>GitGrafitti</h2>
         </div>
-        
+
         <!-- Navigation Actions -->
         <div class="nav-actions">
-            
+
             <!-- New GitHub Repository Link Button -->
             <a href="https://github.com/nihvp/gitgrafitti" target="_blank" rel="noopener noreferrer" class="theme-toggle-btn" title="View Source on GitHub" aria-label="View on GitHub">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
@@ -84,16 +84,16 @@
                     <circle class="sun-core" cx="16" cy="16" r="8.1" mask="url(#moon-mask)" />
                 </svg>
             </button>
-            
+
             <button id="help-btn" class="secondary-btn"><span>[?]</span> Guide</button>
         </div>
     </header>
 
     <main class="container">
-        
+
         <!-- Application Workspace Panel -->
         <section class="panel">
-            
+
             <!-- Controls for picking the year and color -->
             <div class="heatmap-controls-top">
                 <div id="tour-step-1" class="tour-group-inline">
@@ -106,18 +106,18 @@
 
                     <div class="control-group">
                         <label>Ink Shade:</label>
-                        <div class="color-picker">
-                            <label class="color-option" style="background-color: #9be9a8;">
-                                <input type="radio" name="shade" value="#9be9a8">
+                        <div class="color-picker" id="color-picker">
+                            <label class="color-option level-1" title="Level 1: Less Commits (1 commit)">
+                                <input type="radio" name="shade" value="1">
                             </label>
-                            <label class="color-option" style="background-color: #40c463;">
-                                <input type="radio" name="shade" value="#40c463">
+                            <label class="color-option level-2" title="Level 2: (4 commits)">
+                                <input type="radio" name="shade" value="2">
                             </label>
-                            <label class="color-option" style="background-color: #30a14e;">
-                                <input type="radio" name="shade" value="#30a14e">
+                            <label class="color-option level-3" title="Level 3: (8 commits)">
+                                <input type="radio" name="shade" value="3">
                             </label>
-                            <label class="color-option" style="background-color: #216e39;">
-                                <input type="radio" name="shade" value="#216e39" checked>
+                            <label class="color-option level-4" title="Level 4: More Commits (12 commits)">
+                                <input type="radio" name="shade" value="4" checked>
                             </label>
                         </div>
                     </div>
@@ -126,8 +126,36 @@
 
             <!-- Heatmap Drawing Grid -->
             <div class="heatmap-wrapper" id="tour-step-2">
-                <div id="heatmap" class="heatmap-grid">
-                    <!-- Day squares generated rapidly via JS DocumentFragments -->
+                <div class="heatmap-container">
+                    <div class="heatmap-body">
+                        <div class="heatmap-days" aria-hidden="true">
+                            <span class="day-label" style="grid-row: 2;">Mon</span>
+                            <span class="day-label" style="grid-row: 4;">Wed</span>
+                            <span class="day-label" style="grid-row: 6;">Fri</span>
+                        </div>
+                        <div class="heatmap-main">
+                            <div id="heatmap-months" class="heatmap-months">
+                                <!-- Month labels generated dynamically via JS based on year -->
+                            </div>
+                            <div id="heatmap" class="heatmap-grid">
+                                <!-- Day squares generated rapidly via JS DocumentFragments -->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="heatmap-footer">
+                        <a href="https://docs.github.com/en/account-and-profile/setting-up-and-managing-your-github-profile/managing-contribution-settings-on-your-profile/why-are-my-contributions-not-showing-up-on-my-profile" target="_blank" rel="noopener noreferrer" class="contrib-legend-link">Learn how GitHub counts contributions</a>
+                        <div class="contrib-legend">
+                            <span class="legend-label">Less</span>
+                            <ul class="legend-cells">
+                                <li class="legend-cell level-0" data-level="0" title="No contributions"></li>
+                                <li class="legend-cell level-1" data-level="1" title="Level 1: Less commits (1 commit)"></li>
+                                <li class="legend-cell level-2" data-level="2" title="Level 2: (4 commits)"></li>
+                                <li class="legend-cell level-3" data-level="3" title="Level 3: (8 commits)"></li>
+                                <li class="legend-cell level-4" data-level="4" title="Level 4: More commits (12 commits)"></li>
+                            </ul>
+                            <span class="legend-label">More</span>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -139,7 +167,7 @@
                         <option value="+0000">UTC / GMT (+0000)</option>
                     </select>
                 </div>
-                
+
                 <div class="action-buttons">
                     <button id="reset-btn" class="secondary-btn">
                         <span>[x]</span> Clear Grid
@@ -157,7 +185,7 @@
             <div class="output-header">
                 <label for="code-output">Your Bash Script:</label>
                 <button id="copy-btn" class="icon-btn">
-                    <span id="copy-icon">[Copy]</span> 
+                    <span id="copy-icon">[Copy]</span>
                 </button>
             </div>
             <textarea id="code-output" rows="8" readonly placeholder="Your generated git commands will appear here..."></textarea>
@@ -171,7 +199,7 @@
 
     <!-- Modals & Overlays for the Guide -->
     <div id="modal-overlay" class="modal-overlay hidden">
-        
+
         <!-- Welcome Check -->
         <div id="modal-question" class="modal-content panel hidden">
             <button class="close-modal-btn">X</button>
@@ -224,7 +252,7 @@
                     <div class="code-box"><code>git push -u origin main</code></div>
                     <p style="margin-top: 10px; font-size: 0.85rem; opacity: 0.8;"><em>(If it fails, try using <code>master</code> instead of <code>main</code>)</em></p>
                 </div>
-                
+
                 <div class="wizard-progress-wrapper">
                     <div class="progress-bar-container">
                         <div id="wizard-progress-bar" class="progress-bar-fill" style="width: 20%;"></div>

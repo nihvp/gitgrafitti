@@ -31,7 +31,7 @@ Git allows commit metadata to include custom timestamp variables. GitGrafitti le
 ```bash
 GIT_AUTHOR_DATE="2026-05-12 12:00:00 +0400" GIT_COMMITTER_DATE="2026-05-12 12:00:00 +0400" git commit --allow-empty -m "Art commit"
 ```
-Because GitHub calculates your graph's green shades based on relative daily commit counts, GitGrafitti automatically calculates how many commits are required for each pixel level (from 1 commit for dark green up to 12 commits for bright green) and loops them into a single script.
+Because GitHub calculates your graph's green shades based on relative daily commit counts (rendering dark green for more commits in light mode, and light green for more commits in dark mode), GitGrafitti automatically calculates how many commits are required for each pixel level (from 1 commit for Level 1 up to 12 commits for Level 4) and dynamically adapts its UI palette and contribution scale legend between light and dark modes.
 
 ## Quickstart Guide
 1. Create a Fresh Repository on GitHub
